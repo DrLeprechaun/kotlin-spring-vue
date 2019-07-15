@@ -13,8 +13,8 @@
     <description>Kotlin + Spring Boot + Vue.js</description>
 
     <modules>
-        <module>backend</module>
         <module>frontend</module>
+        <module>backend</module>
     </modules>
 
     <parent>

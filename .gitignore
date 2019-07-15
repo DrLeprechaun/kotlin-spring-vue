@@ -34,7 +34,7 @@ backend/build/
 # logback
 logback.out.xml
 
-
+backend/src/main/resources/public/
 backend/target
 backend/.mvn
 backend/mvnw
