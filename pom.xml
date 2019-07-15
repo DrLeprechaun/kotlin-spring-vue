@@ -8,13 +8,14 @@
     <artifactId>demo</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
+
+    <name>kotlin-spring-vue</name>
+    <description>Kotlin + Spring Boot + Vue.js</description>
+
     <modules>
         <module>backend</module>
         <module>frontend</module>
     </modules>
-
-    <name>kotlin-spring-vue</name>
-    <description>Kotlin + Spring Boot + Vue.js</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
