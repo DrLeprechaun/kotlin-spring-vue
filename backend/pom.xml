@@ -10,7 +10,6 @@
 	</parent>
 
 	<artifactId>backend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>backend</name>
 	<packaging>jar</packaging>
 	<description>Backend module for Kotlin + Spring Boot + Vue.js</description>
