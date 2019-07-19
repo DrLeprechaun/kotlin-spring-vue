@@ -9,17 +9,28 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import com.kotlinspringvue.backend.repository.UserRepository
 import com.kotlinspringvue.backend.jpa.User
+import com.kotlinspringvue.backend.email.EmailServiceImpl
+import com.kotlinspringvue.backend.web.response.ResponseMessage
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.ResponseEntity
+import org.springframework.http.HttpStatus
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 class BackendController() {
 
+    @Value("\${spring.mail.username}")
+    lateinit var addressee: String
+
     @Autowired
     lateinit var personRepository: PersonRepository
 
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var emailService: EmailServiceImpl
 
     val counter = AtomicLong()
 
@@ -43,5 +54,44 @@ class BackendController() {
     @ResponseBody
     fun getAdminContent(): String {
         return "Admin's content"
+    }
+
+    @GetMapping("/sendSimpleEmail")
+    @PreAuthorize("hasRole('USER')")
+    fun sendSimpleEmail(): ResponseEntity<*> {
+        try {
+            emailService.sendSimpleMessage(addressee, "Simple Email", "Hello! This is simple email")
+        } catch (e: Exception) {
+            return ResponseEntity(ResponseMessage("Error while sending message"), HttpStatus.BAD_REQUEST)
+        }
+
+        return ResponseEntity(ResponseMessage("Email has been sent"), HttpStatus.OK)
+    }
+
+    @GetMapping("/sendTemplateEmail")
+    @PreAuthorize("hasRole('USER')")
+    fun sendTemplateEmail(): ResponseEntity<*> {
+        try {
+            var params:MutableMap<String, Any> = mutableMapOf()
+            params["addresseeName"] = addressee
+            params["signatureImage"] = "https://coderlook.com/wp-content/uploads/2019/07/spring-by-pivotal.png"
+            emailService.sendSimpleMessageUsingTemplate(addressee, "Template Email", "emailTemplate", params)
+        } catch (e: Exception) {
+            return ResponseEntity(ResponseMessage("Error while sending message"), HttpStatus.BAD_REQUEST)
+        }
+
+        return ResponseEntity(ResponseMessage("Email has been sent"), HttpStatus.OK)
+    }
+
+    @GetMapping("/sendHtmlEmail")
+    @PreAuthorize("hasRole('USER')")
+    fun sendHtmlEmail(): ResponseEntity<*> {
+        try {
+            emailService.sendHtmlMessage(addressee, "HTML Email", "<h1>Hello!</h1><p>This is HTML email</p>")
+        } catch (e: Exception) {
+            return ResponseEntity(ResponseMessage("Error while sending message"), HttpStatus.BAD_REQUEST)
+        }
+
+        return ResponseEntity(ResponseMessage("Email has been sent"), HttpStatus.OK)
     }
 }

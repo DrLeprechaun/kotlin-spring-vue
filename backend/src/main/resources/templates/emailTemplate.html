@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif;">
+<h3>Hello!</h3>
+<div style="margin-top: 20px; margin-bottom: 30px; margin-left: 20px;">
+    <p>Hello, dear: <b><span th:text="${addresseeName}"></span></b></p>
+</div>
+<div>
+    <img th:src="${signatureImage}" width="200px;"/>
+</div>
+</body>
+</html>

@@ -7,6 +7,7 @@ import SignIn from '@/components/SignIn'
 import SignUp from '@/components/SignUp'
 import AdminPage from '@/components/AdminPage'
 import UserPage from '@/components/UserPage'
+import EmailPage from '@/components/EmailPage'
 
 Vue.use(Router)
 
@@ -42,6 +43,11 @@ export default new Router({
         path: '/admin',
         name: 'AdminPage',
         component: AdminPage
+      },
+      {
+        path: '/email',
+        name: 'EmailPage',
+        component: EmailPage
       }
     ]
 })

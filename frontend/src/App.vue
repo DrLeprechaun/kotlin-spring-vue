@@ -7,6 +7,7 @@
       <router-link to="/"><img height="30px" src="./assets/img/vuejs-logo.png" alt="Kotlin+Spring+Vue"/></router-link>
       <router-link to="/user" class="nav-link text-light" v-if="this.$store.getters.isAuthenticated">User</router-link>
       <router-link to="/admin" class="nav-link text-light" v-if="this.$store.getters.isAuthenticated && this.$store.getters.isAdmin">Admin</router-link>
+      <router-link to="/email" class="nav-link text-light" v-if="this.$store.getters.isAuthenticated">Email</router-link>
       <router-link to="/register" class="nav-link text-light" v-if="!this.$store.getters.isAuthenticated">Register</router-link>
       <router-link to="/login" class="nav-link text-light" v-if="!this.$store.getters.isAuthenticated">Login</router-link>
       <a href="#" class="nav-link text-light" v-if="this.$store.getters.isAuthenticated" v-on:click="logout">Logout </a>
