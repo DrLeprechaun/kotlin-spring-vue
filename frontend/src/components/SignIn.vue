@@ -25,9 +25,17 @@
                  <div class="mt-2"></div>
               </div>
 
-              <b-button v-on:click="login" variant="primary">Login</b-button>
+              <b-button v-on:click="validateCaptcha" variant="primary">Login</b-button>
 
               <hr class="my-4" />
+
+              <vue-recaptcha
+                    ref="recaptcha"
+                    size="invisible"
+                    :sitekey="sitekey"
+                    @verify="onCapthcaVerified"
+                    @expired="onCaptchaExpired"
+                />
 
               <b-button variant="link">Forget password?</b-button>
             </b-card>
@@ -37,9 +45,11 @@
 
 <script>
 import {AXIOS} from './http-common'
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
     name: 'SignIn',
+    components: { VueRecaptcha },
     data() {
           return {
           username: '',
@@ -47,6 +57,7 @@ export default {
           dismissSecs: 5,
           dismissCountDown: 0,
           alertMessage: 'Request error',
+          sitekey: '6LfDWa4UAAAAAG4lOwUUwqadaE0c9mrGRl0HYb5t'
       }
     },
     methods: {
@@ -70,6 +81,25 @@ export default {
       showAlert() {
           this.dismissCountDown = this.dismissSecs
       },
+      validateCaptcha() {
+            this.$refs.recaptcha.execute()
+        },
+        onCapthcaVerified(recaptchaToken) {
+            AXIOS.post(`/auth/signin`, {'username': this.$data.username, 'password': this.$data.password, 'recapctha_token': recaptchaToken})
+            .then(response => {
+              this.$store.dispatch('login', {'token': response.data.accessToken, 'roles': response.data.authorities, 'username': response.data.username});
+              this.$router.push('/home')
+            }, error => {
+              this.showAlert(error.response.data.message);
+            })
+            .catch(e => {
+              console.log(e);
+              this.showAlert('Server error. Please, report this error website owners');
+            })
+        },
+        onCaptchaExpired() {
+            this.$refs.recaptcha.reset()
+        }
     }
   }
 </script>

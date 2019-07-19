@@ -30,6 +30,7 @@ import com.kotlinspringvue.backend.jpa.User
 import com.kotlinspringvue.backend.repository.UserRepository
 import com.kotlinspringvue.backend.repository.RoleRepository
 import com.kotlinspringvue.backend.jwt.JwtProvider
+import com.kotlinspringvue.backend.service.ReCaptchaService
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 @RestController
@@ -51,13 +52,19 @@ class AuthController() {
     @Autowired
     lateinit var jwtProvider: JwtProvider
 
+    @Autowired
+    lateinit var captchaService: ReCaptchaService
 
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginUser): ResponseEntity<*> {
 
         val userCandidate: Optional <User> = userRepository.findByUsername(loginRequest.username!!)
 
-        if (userCandidate.isPresent) {
+        if (!captchaService.validateCaptcha(loginRequest.recaptchaToken!!)) {
+            return ResponseEntity(ResponseMessage("Validation failed (ReCaptcha v2)"),
+                    HttpStatus.BAD_REQUEST)
+        }
+        else if (userCandidate.isPresent) {
             val user: User = userCandidate.get()
             val authentication = authenticationManager.authenticate(
                     UsernamePasswordAuthenticationToken(loginRequest.username, loginRequest.password))
@@ -76,7 +83,10 @@ class AuthController() {
 
         val userCandidate: Optional <User> = userRepository.findByUsername(newUser.username!!)
 
-        if (!userCandidate.isPresent) {
+        if (!captchaService.validateCaptcha(newUser.recaptchaToken!!)) {
+            return ResponseEntity(ResponseMessage("Validation failed (ReCaptcha v2)"),
+                    HttpStatus.BAD_REQUEST)
+        } else if (!userCandidate.isPresent) {
             if (usernameExists(newUser.username!!)) {
                 return ResponseEntity(ResponseMessage("Username is already taken!"),
                         HttpStatus.BAD_REQUEST)

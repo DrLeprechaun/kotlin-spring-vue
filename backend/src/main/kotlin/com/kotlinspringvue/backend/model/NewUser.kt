@@ -20,6 +20,9 @@ class NewUser : Serializable {
     @JsonProperty("password")
     var password: String? = null
 
+    @JsonProperty("recapctha_token")
+    var recaptchaToken: String? = null
+
     constructor() {}
 
     constructor(username: String, firstName: String, lastName: String, email: String, password: String, recaptchaToken: String) {
@@ -28,9 +31,11 @@ class NewUser : Serializable {
         this.lastName = lastName
         this.email = email
         this.password = password
+        this.recaptchaToken = recaptchaToken
     }
 
     companion object {
+
         private const val serialVersionUID = -1764970284520387975L
     }
 }
