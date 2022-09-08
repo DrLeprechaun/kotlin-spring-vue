@@ -19,7 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<rest-assured.version>3.3.0</rest-assured.version>
 		<start-class>com.kotlinspringvue.backend.BackendApplicationKt</start-class>
-		<postgresql.version>42.2.5</postgresql.version>
+		<postgresql.version>42.4.1</postgresql.version>
 	</properties>
 
 	<dependencies>
